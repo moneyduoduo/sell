@@ -3,7 +3,7 @@
         <div class="content-wrapper">
             <!-- 商标 -->
             <div class="avatar">
-                <img width="64" height="64" :src="seller.avatar" alt="">
+                <img width="64" height="64" :src="'http://localhost:8084/pic/' + seller.pic" alt="">
             </div>
             <!-- 商家内容 -->
             <div class="content">
@@ -14,7 +14,7 @@
                 </div>
                 <!-- 配送方式和送达时间 -->
                 <div class="description">
-                    {{seller.description}}/{{seller.deliveryTime}}分钟送到
+                    {{seller.description}}/{{seller.deliveryTime}}分钟上菜
                 </div>
                 <!-- 商家优惠信息 -->
                 <div v-if="seller.supports" class="supports">
@@ -35,7 +35,7 @@
         </div>
         <!-- 顶部模糊背景 -->
         <div class="background">
-            <img :src="seller.avatar" width="100%" height="100%" alt="">
+            <img :src="'http://localhost:8084/pic/' + seller.pic" width="100%" height="100%" alt="">
         </div>
         <!-- 活动详情弹层页 -->
         <transition name="fade">
@@ -107,7 +107,7 @@ export default {
         }
     },
     created () {
-        this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+        this.classMap = ['discount', 'decrease', 'special', 'invoice', 'guarantee'];
     }
 }
 </script>
@@ -207,6 +207,7 @@ export default {
                 margin-top : 6px
                 width : 22px
                 height : 12px
+                line-height 12px
                 bg-image('bulletin')
                 background-size : 22px 12px
                 background-repeat : no-repeat

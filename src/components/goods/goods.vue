@@ -21,7 +21,7 @@
             <li @click="selectFood(food,$event)" v-for="(food,index) in item.foods" :key="index" class="food-item boder-1px">
               <!-- 商品图片 -->
               <div class="icon">
-                <img width="57" height="57" :src="food.icon" alt="">
+                <img width="57" height="57" :src="'http://localhost:8084/pic/' + food.icon" alt="">
               </div>
               <!-- 商品信息 -->
               <div class="content">
@@ -46,7 +46,8 @@
       </ul>
     </div>
     <!-- 底部购物车模块 -->
-    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :select-foods="selectFoods" :supports="seller.supports" :delivery-price="seller.deliveryPrice"
+    :min-price="seller.minPrice" :delivery-time="seller.deliveryTime"></shopcart>
   </div>
   <!-- 商品详情页 -->
   <food :food="selectedFood" ref="food"></food>
@@ -54,6 +55,7 @@
 </template>
 
 <script>
+import {getGoods} from '@/common/js/httpAPI'
 import BScroll from 'better-scroll'
 import shopcart from 'components/shopcart/shopcart'
 import cartcontrol from 'components/cartcontrol/cartcontrol'
@@ -106,16 +108,28 @@ export default {
     },
   created () {
     // 获取商品数据
-    this.$http.get('/api/goods').then(response => {
-      response = response.body;
-      if (response.errno === ERR_OK) {
-        this.goods = response.data;
+    // this.$http.get('/api/goods').then(response => {
+    //   response = response.body;
+    //   if (response.errno === ERR_OK) {
+    //     this.goods = response.data;
+    //     this.$nextTick(() => {
+    //       this._initScroll();
+    //       this._calculateHeight();
+    //     });
+    //   }
+    // });
+    getGoods('/sell/goods/get').then(result => {
+      result = result.data;
+      if (result.error === ERR_OK) {
+        this.goods = result.data;
         this.$nextTick(() => {
           this._initScroll();
           this._calculateHeight();
         });
       }
-    });
+    }).catch(error => {
+      console.log(error)
+    })
     // 特殊商品小图标
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
   },

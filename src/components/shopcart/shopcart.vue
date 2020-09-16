@@ -14,7 +14,7 @@
             </div>
             <!-- 配送费 -->
             <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}元</div>
-            <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
+            <div class="desc">另需餐桌费￥{{deliveryPrice}}元</div>
           </div>
           <!-- 购物车右侧 -->
           <div class="content-right" @click.stop="pay">
@@ -61,11 +61,14 @@
   <transition name="fade">
     <div class="list-mark" @click="hideList" v-show="listShow"></div>
   </transition>
+  <pay ref="pay" :select-foods="selectFoods" :support="support" :delivery-price="deliveryPrice"
+    :min-price="minPrice" :delivery-time="deliveryTime" :total-price="totalPrice"></pay>
   </div>
 </template>
 
 <script>
 import cartcontrol from 'components/cartcontrol/cartcontrol'
+import pay from 'components/pay/pay'
 import BScroll from 'better-scroll'
 export default {
   data () {
@@ -78,20 +81,27 @@ export default {
         {show: false}
       ],
       dropBalls: [],
-      fold: true
+      fold: true,
+      support: '' // 满减活动
     }
   },
   components: {
     cartcontrol,
-    BScroll
+    BScroll,
+    pay
   },
   methods: {
     // 结算
     pay () {
+      this.$refs.pay.show();
       if (this.totalPrice < this.minPrice) {
         return;
       }
-      window.alert(`支付${this.totalPrice}元`);
+      this.supports.forEach(element => {
+        if (element.type === 1) {
+          this.support = element.description;
+        }
+      });
     },
     // 隐藏购物车
     hideList () {
@@ -171,8 +181,15 @@ export default {
         ];
       }
     },
+    supports: {
+      type: Array
+    },
     // 配送费
     deliveryPrice: {
+      type: Number,
+      default: 0
+    },
+    deliveryTime: {
       type: Number,
       default: 0
     },

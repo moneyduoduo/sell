@@ -5,7 +5,7 @@
         <div class="food-content">
           <!-- 商品图片 -->
           <div class="image-header">
-            <img :src="food.image" alt />
+            <img :src="'http://localhost:8084/pic/' + food.image" alt />
             <div class="back" @click="hide">
                 <i class="icon-arrow_lift"></i>
             </div>
@@ -51,7 +51,7 @@
                     <span class="name">{{rating.username}}</span>
                     <img class="avatar" width="12" height="12" :src="rating.avatar">
                   </div>
-                  <div class="time">{{rating.rateTime | formatDate}}</div>
+                  <div class="time">{{rating.ratetime | formatDate}}</div>
                   <p class="text">
                     <span :class="{'icon-thumb_up':rating.rateType === 0, 'icon-thumb_down':rating.rateType === 1}"></span>
                     {{rating.text}}

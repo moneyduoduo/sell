@@ -6,6 +6,9 @@
         <router-link to="/goods">商品</router-link>
       </div>
       <div class="tab-item">
+        <router-link to="/order">订单</router-link>
+      </div>
+      <div class="tab-item">
         <router-link to="/rating">评论</router-link>
       </div>
       <div class="tab-item">
@@ -13,13 +16,14 @@
       </div>
     </div>
     <!-- 路由外链 -->
-    <keep-alive>
+    <!-- <keep-alive> -->
       <router-view :seller="seller"></router-view>
-    </keep-alive>
+    <!-- </keep-alive> -->
   </div>
 </template>
 
 <script>
+import {getSeller} from '@/common/js/httpAPI'
 import {urlParse} from 'common/js/util';
 import header from 'components/header/header';
 const ERR_OK = 0;
@@ -40,13 +44,31 @@ export default {
   },
   created () {
     // 获取商家信息列表
-    this.$http.get('/api/seller?id=' + this.seller.id).then(response => {
-      response = response.body;
-      if (response.errno === ERR_OK) {
-        // this.seller = response.data;
-        this.seller = Object.assign({}, this.seller, response.data);
+    // this.$http.get('/api/seller?id=' + this.seller.id).then(response => {
+    //   response = response.body;
+    //   if (response.errno === ERR_OK) {
+    //     // this.seller = response.data;
+    //     this.seller = Object.assign({}, this.seller, response.data);
+    //   }
+    // });
+    getSeller('/seller/admin').then(result => {
+      result = result.data;
+      if (result.error === ERR_OK) {
+        this.seller = result.data;
+        if (!this.seller.score % 1 === 0) {
+          this.seller.score = Math.floor(this.seller.score * 100) / 100;
+        }
+        if (!this.seller.serviceScore % 1 === 0) {
+          this.seller.serviceScore = Math.floor(this.seller.serviceScore * 100) / 100;
+        }
+        if (!this.seller.foodScore % 1 === 0) {
+          this.seller.foodScore = Math.floor(this.seller.foodScore * 100) / 100;
+        }
+        this.seller.infos = this.seller.infos.split(',');
       }
-    });
+    }).catch(error => {
+      console.log(error)
+    })
   },
   computed: {
     key () {

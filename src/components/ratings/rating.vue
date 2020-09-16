@@ -7,7 +7,7 @@
         <div class="overview-left">
           <h1 class="score">{{seller.score}}</h1>
           <div class="title">综合评分</div>
-           <div class="rank">高于周边商家{{seller.rankRate}}%</div>
+           <div class="rank">小店的好评率{{seller.rankRate}}%</div>
         </div>
         <!-- 右侧评分 -->
         <div class="overview-right">
@@ -22,7 +22,7 @@
             <span class="score">{{seller.foodScore}}</span>
           </div>
           <div class="delivery-wrapper">
-            <span class="title">送达时间</span>
+            <span class="title">上菜时间</span>
             <span class="delivery">{{seller.deliveryTime}}分钟</span>
           </div>
         </div>
@@ -32,10 +32,10 @@
        @ratingtype-select="ratingtype_select" @content-toggle="content_toggle"></ratingselect>
       <div class="rating-wrapper">
         <ul>
-          <li v-show="needShow(rating.rateType, rating.text)" v-for="rating in ratings" :key="rating.rateTime" class="rating-item">
+          <li v-show="needShow(rating.rateType, rating.text)" v-for="(rating, index) in ratings" :key="index" class="rating-item">
             <!-- 头像 -->
             <div class="avatar">
-              <img width="28" height="28" :src="rating.avatar">
+              <img width="28" height="28" src="http://static.galileo.xiaojukeji.com/static/tms/default_header.png">
             </div>
             <div class="content">
               <h1 class="name">{{rating.username}}</h1>
@@ -46,7 +46,7 @@
               <p class="text">{{rating.text}}</p>
               <div class="recommend" v-show="rating.recommend.length">
                 <span class="icon-thumb_up"></span>
-                <span class="item" v-for="item in rating.recommend" :key="item">{{item}}</span>
+                <span class="item" v-for="(item, index) in rating.recommend.split(',')" :key="index">{{item}}</span>
               </div>
               <div class="time">{{rating.rateTime | formatDate}}</div>
             </div>
@@ -63,6 +63,7 @@ import star from 'components/star/star';
 import split from 'components/split/split';
 import ratingselect from 'components/ratingselect/ratingselect';
 import {formatDate} from 'common/js/date';
+import {getRatingsAPI} from '@/common/js/httpAPI'
 
 const ALL = 2;
 const ERR_OK = 0;
@@ -86,10 +87,32 @@ export default {
     }
   },
   created () {
-    this.$http.get('api/ratings').then((response) => {
-      response = response.body;
-      if (response.errno === ERR_OK) {
+    // this.$http.get('api/ratings').then((response) => {
+    //   response = response.body;
+    //   if (response.errno === ERR_OK) {
+    //     this.ratings = response.data;
+    //     this.$nextTick(() => {
+    //       if (!this.scroll) {
+    //         this.scroll = new Bscroll(this.$refs.ratings, {
+    //           click: true
+    //         });
+    //       } else {
+    //           this.scroll.refresh();
+    //       }
+    //   })
+    //   }
+    // })
+    getRatingsAPI('/sell/ratings/get/' + 'admin').then(response => {
+      response = response.data;
+      if (response.error === ERR_OK) {
         this.ratings = response.data;
+        this.ratings.forEach((item, index) => {
+          if (item.recommend === '' || item.recommend === null) {
+            this.ratings[index].rateType = 1;
+          } else {
+            this.ratings[index].rateType = 0;
+          }
+        });
         this.$nextTick(() => {
           if (!this.scroll) {
             this.scroll = new Bscroll(this.$refs.ratings, {

@@ -12,29 +12,29 @@
                 </div>
                 <ul class="remark">
                     <li class="block">
-                        <h2>起送价</h2>
+                        <h2>起点价</h2>
                         <div class="content">
                             <span class="stress">{{seller.minPrice}}元</span>
                         </div>
                     </li>
                     <li class="block">
-                        <h2>商家配送</h2>
+                        <h2>餐桌费用</h2>
                         <div class="content">
                             <span class="stress">{{seller.deliveryPrice}}元</span>
                         </div>
                     </li>
                     <li class="block">
-                        <h2>平均配送时间</h2>
+                        <h2>平均上菜时间</h2>
                         <div class="content">
                             <span class="stress">{{seller.deliveryTime}}分钟</span>
                         </div>
                     </li>
                 </ul>
                 <!-- 店铺收藏 -->
-                <div class="favorite" @click="toggleFavorite">
+                <!-- <div class="favorite" @click="toggleFavorite">
                     <span class="icon-favorite" :class="{'active': favorite}"></span>
                     <span class="text">{{favoriteText}}</span>
-                </div>
+                </div> -->
             </div>
             <split></split>
             <!-- 活动与公告 -->
@@ -53,7 +53,7 @@
             </div>
             <split></split>
             <!-- 店内图片预览 -->
-            <div class="pics">
+            <!-- <div class="pics">
                 <h1 class="title">商家实景</h1>
                 <div class="pic-wrapper" ref="picWrapper">
                     <ul class="pic-list" ref="picList">
@@ -63,7 +63,7 @@
                     </ul>
                 </div>
             </div>
-            <split></split>
+            <split></split> -->
             <!-- 其他信息 -->
             <div class="info">
                 <h1 class="title border-1px">商家信息</h1>
@@ -134,7 +134,7 @@ export default {
         }
     },
     created () {
-        this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+        this.classMap = ['discount', 'decrease', 'special', 'invoice', 'guarantee'];
     },
     mounted () {
         this._intScroll();
@@ -249,7 +249,6 @@ export default {
                     &:last-child
                         border-none()
                 .icon
-                    vertical-align : top
                     display : inline-block
                     width : 12px
                     height : 12px
@@ -267,7 +266,8 @@ export default {
                     &.special
                         bg-image('special_4')
                 .text
-                    line-height 16px
+                    vertical-align top
+                    line-height 12px
                     font-size 12px
                     color rgb(7, 17, 27)
 
